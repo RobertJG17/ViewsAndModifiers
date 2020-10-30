@@ -7,16 +7,21 @@
 
 import SwiftUI
 
-struct CapsuleText: View {
-    var text: String
+struct GridStack<Content: View>: View {
+    let rows: Int
+    let columns: Int
+    let content: (Int, Int) -> Content
     
     var body: some View {
-        Text(text)
-            .font(.largeTitle)
-            .padding()
-            .foregroundColor(.white)
-            .background(Color.blue)
-            .clipShape(Capsule())
+        VStack {
+            ForEach(0 ..< rows) { row in
+                HStack {
+                    ForEach(0 ..< self.columns) { column in
+                        self.content(row, column)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -24,9 +29,8 @@ struct ContentView: View {
     // MARK: - View Proerties
     
     var body: some View {
-        VStack(spacing: 10) {
-            CapsuleText(text: "First")
-            CapsuleText(text: "Second")
+        GridStack(rows: 4, columns: 4) { row, column in
+            Text("R\(row) C\(column)")
         }
     }
 }
